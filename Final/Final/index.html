@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexusHR | Enterprise Workforce Intelligence</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div id="toastContainer" class="toast-container"></div>
+    <div class="app-layout">
+      <header class="app-header">
+        <div class="header-inner">
+          <div class="brand-block">
+            <div class="brand-icon"><i class="fa-solid fa-cubes"></i></div>
+            <div>
+              <h1>Nexus<span>HR</span></h1>
+              <p class="subtitle">Global Workforce Analytics & Directory</p>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <div class="meta-badge">
+              <i class="fa-regular fa-calendar-days"></i>
+              <span id="currentDate">--</span>
+              <span class="divider">|</span>
+              <i class="fa-regular fa-clock"></i>
+              <span id="currentTime">--</span>
+            </div>
+
+            <button
+              id="themeToggleBtn"
+              class="btn-pill"
+              aria-label="Toggle Theme"
+            >
+              <i class="fa-solid fa-moon"></i> <span>Dark Mode</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div id="statusMessage" class="status-container"></div>
+        <section class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon blue">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="metric-data">
+              <span class="metric-label">Headcount</span>
+              <h3 id="employeeCount">0</h3>
+              <span class="metric-trend positive"
+                ><i class="fa-solid fa-arrow-up"></i> Active</span
+              >
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon green">
+              <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div class="metric-data">
+              <span class="metric-label">Annual Payroll</span>
+              <h3 id="totalSalary">₹0</h3>
+              <span class="metric-trend neutral">Budget Approved</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon purple">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="metric-data">
+              <span class="metric-label">Avg Compensation</span>
+              <h3 id="averageSalary">₹0</h3>
+              <span class="metric-trend positive"
+                ><i class="fa-solid fa-percent"></i> Median Norm</span
+              >
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon orange">
+              <i class="fa-solid fa-building-flag"></i>
+            </div>
+            <div class="metric-data">
+              <span class="metric-label">Primary Dept</span>
+              <h3 id="topDepartment">N/A</h3>
+              <span class="metric-trend neutral">Most Allocated</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="spotlight-card">
+          <div class="spotlight-badge">
+            <i class="fa-solid fa-crown"></i> Top Compensation Earner
+          </div>
+          <div class="spotlight-content">
+            <div class="spotlight-details">
+              <h2><span id="highestPaid">Calculating...</span></h2>
+              <p>
+                Leading payroll distribution at
+                <span id="highestEmployeeSalary" class="highlight-price"
+                  >₹0</span
+                >
+                / year.
+              </p>
+            </div>
+            <button id="viewTopExecutiveBtn" class="btn-outline-light">
+              <i class="fa-solid fa-id-badge"></i> View Profile
+            </button>
+          </div>
+        </section>
+
+        <section class="command-card">
+          <div class="command-header">
+            <div>
+              <h2>Directory Console</h2>
+              <p class="section-desc">
+                Search, filter, arrange, and manage operational profiles
+              </p>
+            </div>
+
+            <div class="command-tools">
+              <button id="exportCsvBtn" class="btn-secondary">
+                <i class="fa-solid fa-file-arrow-down"></i> Export CSV
+              </button>
+
+              <div class="view-switch">
+                <button
+                  id="gridViewBtn"
+                  class="view-btn active"
+                  title="Grid View"
+                >
+                  <i class="fa-solid fa-table-cells-large"></i>
+                </button>
+                <button id="tableViewBtn" class="view-btn" title="Table View">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search staff by name, department, or company email..."
+              />
+              <button id="clearSearch" class="clear-search hidden">
+                &times;
+              </button>
+            </div>
+
+            <div class="sort-wrapper">
+              <label for="sortSelect"
+                ><i class="fa-solid fa-arrow-down-short-wide"></i> Sort:</label
+              >
+              <select id="sortSelect">
+                <option value="nameAsc">Alphabetical (A - Z)</option>
+                <option value="nameDesc">Alphabetical (Z - A)</option>
+                <option value="salaryDesc">Compensation: Highest First</option>
+                <option value="salaryAsc">Compensation: Lowest First</option>
+                <option value="ageAsc">Experience: Youngest First</option>
+                <option value="ageDesc">Experience: Oldest First</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="chips-container" id="deptFilterChips">
+            <button class="chip active" data-department="All">
+              All Operations
+            </button>
+            <button class="chip" data-department="Engineering">
+              Engineering
+            </button>
+            <button class="chip" data-department="Marketing">Marketing</button>
+            <button class="chip" data-department="Sales">Sales</button>
+            <button class="chip" data-department="Human Resources">
+              Human Resources
+            </button>
+            <button class="chip" data-department="Services">Services</button>
+          </div>
+        </section>
+
+        <div id="employeeContainer" class="employee-container grid-view"></div>
+
+        <section class="form-section-card">
+          <div class="form-header">
+            <i class="fa-solid fa-user-plus"></i>
+            <div>
+              <h2>Onboard New Personnel</h2>
+              <p class="section-desc">
+                Create and verify verified enterprise directory assets
+              </p>
+            </div>
+          </div>
+
+          <form id="employeeForm" novalidate>
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="name"
+                  >Legal Full Name <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="e.g. Vikramaditya Rao"
+                />
+                <span id="nameError" class="field-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label for="age">Age <span class="required">*</span></label>
+                <input
+                  type="number"
+                  id="age"
+                  min="18"
+                  max="75"
+                  placeholder="e.g. 32"
+                />
+                <span id="ageError" class="field-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label for="email"
+                  >Corporate Email <span class="required">*</span></label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="e.g. v.rao@nexuscorp.com"
+                />
+                <span id="emailError" class="field-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label for="department"
+                  >Assigned Business Unit <span class="required">*</span></label
+                >
+                <select id="department">
+                  <option value="">Choose BU</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Human Resources">Human Resources</option>
+                  <option value="Services">Services</option>
+                </select>
+                <span id="departmentError" class="field-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label for="salary"
+                  >Base CTC (INR ₹) <span class="required">*</span></label
+                >
+                <input type="number" id="salary" placeholder="e.g. 1850000" />
+                <span id="salaryError" class="field-error"></span>
+              </div>
+
+              <div class="form-field">
+                <label for="roleTitle">Job Title</label>
+                <input
+                  type="text"
+                  id="roleTitle"
+                  placeholder="e.g. Lead Cloud Architect"
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary-action">
+              <i class="fa-solid fa-shield-halved"></i> Complete Personnel
+              Registration
+            </button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <div id="profileModal" class="modal-overlay" aria-hidden="true">
+      <div class="profile-dossier-card">
+        <button
+          id="closeProfileModal"
+          class="close-icon-btn"
+          aria-label="Close Profile"
+        >
+          &times;
+        </button>
+
+        <div class="dossier-header-cover">
+          <div class="cover-gradient"></div>
+          <div class="profile-avatar-wrapper">
+            <img id="dossierAvatar" src="" alt="Profile Image" />
+            <span class="active-dot" title="Online / Active Contract"></span>
+          </div>
+        </div>
+
+        <div class="dossier-body">
+          <div class="dossier-heading">
+            <h2 id="dossierName">Full Name</h2>
+            <p id="dossierRole" class="dossier-role-title">Title / Role</p>
+            <span id="dossierDeptBadge" class="dept-badge">Department</span>
+          </div>
+
+          <div class="dossier-stats-bar">
+            <div class="dossier-stat">
+              <span class="stat-title">Base Salary</span>
+              <strong id="dossierSalary">₹0</strong>
+            </div>
+            <div class="dossier-stat">
+              <span class="stat-title">Age / Exp</span>
+              <strong id="dossierAge">--</strong>
+            </div>
+            <div class="dossier-stat">
+              <span class="stat-title">Performance</span>
+              <span class="star-rating">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star-half-stroke"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="dossier-details-grid">
+            <div class="detail-tile">
+              <i class="fa-regular fa-envelope"></i>
+              <div>
+                <small>Email Address</small>
+                <p id="dossierEmail">user@company.com</p>
+              </div>
+            </div>
+            <div class="detail-tile">
+              <i class="fa-solid fa-phone"></i>
+              <div>
+                <small>Direct Line</small>
+                <p id="dossierPhone">+91 (0) 000 0000</p>
+              </div>
+            </div>
+            <div class="detail-tile">
+              <i class="fa-solid fa-location-dot"></i>
+              <div>
+                <small>Office Location</small>
+                <p id="dossierLocation">Bangalore, IN</p>
+              </div>
+            </div>
+            <div class="detail-tile">
+              <i class="fa-solid fa-fingerprint"></i>
+              <div>
+                <small>Employee Identifier</small>
+                <p id="dossierId">NX-0000</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="dossier-skills-section">
+            <h4>Core Proficiencies & Competencies</h4>
+            <div id="dossierSkills" class="tags-cluster">
+              <span class="skill-tag">Systems Engineering</span>
+              <span class="skill-tag">Security & Compliance</span>
+              <span class="skill-tag">Agile Leadership</span>
+            </div>
+          </div>
+
+          <div class="dossier-footer-actions">
+            <button id="dossierEditTrigger" class="btn-outline-action">
+              <i class="fa-solid fa-pen-to-square"></i> Modify Details
+            </button>
+            <button id="dossierCloseBtn" class="btn-secondary">Dismiss</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="editModal" class="modal-overlay" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3><i class="fa-solid fa-pen-clip"></i> Edit Personnel Profile</h3>
+          <span id="closeModal" class="close-icon-btn">&times;</span>
+        </div>
+        <form id="editEmployeeForm">
+          <input type="hidden" id="editEmpId" />
+          <div class="form-field">
+            <label for="editName">Full Legal Name</label>
+            <input type="text" id="editName" required />
+          </div>
+          <div class="form-field">
+            <label for="editDepartment">Department</label>
+            <select id="editDepartment" required>
+              <option value="Engineering">Engineering</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Sales">Sales</option>
+              <option value="Human Resources">Human Resources</option>
+              <option value="Services">Services</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="editSalary">Base Salary (₹)</label>
+            <input type="number" id="editSalary" required />
+          </div>
+          <div class="modal-actions">
+            <button type="button" id="cancelEditBtn" class="btn-secondary">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary-action">
+              <i class="fa-solid fa-floppy-disk"></i> Commit Updates
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
